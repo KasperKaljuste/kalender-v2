@@ -46,6 +46,9 @@ public class Event implements Comparable<Event>{
         return detailid;
     }
 
+    public void setDetailid(ArrayList<String> detailid) {
+        this.detailid = detailid;
+    }
 
     @Override
     public String toString() {

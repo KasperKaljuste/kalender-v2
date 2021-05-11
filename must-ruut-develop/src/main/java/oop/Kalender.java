@@ -1,9 +1,6 @@
 package oop;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.RotateTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -44,6 +42,7 @@ public class Kalender extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
     @Override
     public void start(Stage peaLava) throws Exception {
 
@@ -55,19 +54,18 @@ public class Kalender extends Application {
                 System.out.println("File tehtud: " + evendidFail.getName());
             } else {
                 System.out.println("Fail on olemas, loen evendid programmi");
-                FileInputStream evendidInput=new FileInputStream("evendid.txt");
-                Scanner sc=new Scanner(evendidInput);    //file to be scanned
-                while(sc.hasNextLine()){
+                FileInputStream evendidInput = new FileInputStream("evendid.txt");
+                Scanner sc = new Scanner(evendidInput);    //file to be scanned
+                while (sc.hasNextLine()) {
                     String rida = sc.nextLine();
                     String[] tükid = rida.split("; ");
-                    String asenda1 = tükid[3].replace("[","");
-                    String asenda2 = asenda1.replace("]","");
+                    String asenda1 = tükid[3].replace("[", "");
+                    String asenda2 = asenda1.replace("]", "");
                     ArrayList<String> detailidFailist = new ArrayList<String>(Arrays.asList(asenda2.split(", ")));
-                    if(tükid.length==4) {
+                    if (tükid.length == 4) {
                         Event failistLoetudEvent = new Event(tükid[0], tükid[1], tükid[2], detailidFailist);
                         evendid.add(failistLoetudEvent);
-                    }
-                    else{ //meeldetuletus on ka lisaks muule
+                    } else { //meeldetuletus on ka lisaks muule
                         SimpleDateFormat failistFormaat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                         Date meeldetuletusFailist = failistFormaat.parse(tükid[4]);
                         Meeldetuletus failistLoetudEvent = new Meeldetuletus(tükid[0], tükid[1], tükid[2], detailidFailist, meeldetuletusFailist);
@@ -81,19 +79,12 @@ public class Kalender extends Application {
         }
 
 
-
-
-
         Group juur = new Group();
 
         Button nupp1 = new Button("Lisa sündmus");
-        Button nupp2 = new Button("Salvesta sündmused");
         Button nupp3 = new Button("Väljasta sündmused");
         Button nupp4 = new Button("Muuda sündmust");
         Button nupp5 = new Button("Kustuta sündmus");
-
-
-
 
 
         Label clock = new Label(); //https://stackoverflow.com/questions/38566638/javafx-displaying-time-and-refresh-in-every-second/38567319
@@ -111,50 +102,47 @@ public class Kalender extends Application {
         clock.setFont(Font.font(50));
 
         BorderPane PeaPane1 = new BorderPane();
-        PeaPane1.setMinWidth(700);
-        PeaPane1.setMinHeight(300);
+        PeaPane1.setMinWidth(1000);
+        PeaPane1.setMinHeight(400);
 
         nupp1.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        nupp2.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         nupp3.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         nupp4.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         nupp5.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         HBox nupud = new HBox(8);
         nupud.setPadding(new Insets(0, 0, 30, 0));
-        nupud.getChildren().addAll(nupp1, nupp2, nupp3, nupp4, nupp5);
+        nupud.getChildren().addAll(nupp1, nupp3, nupp4, nupp5);
         PeaPane1.setCenter(clock);
         nupud.setAlignment(Pos.CENTER);
         PeaPane1.setBottom(nupud);
 
         Text escapetekst = new Text("Programmi lõpetamiseks vajutage ESC nuppu.");
-        HBox escapetekstHBox = new HBox();
-        escapetekstHBox.getChildren().add(escapetekst);
-        escapetekstHBox.setAlignment(Pos.CENTER);
+        VBox escapetekstVBox = new VBox();
+        Text meeldetuletustekstx = new Text("");
+        meeldetuletustekstx.setVisible(false);
+        escapetekstVBox.getChildren().addAll(escapetekst, meeldetuletustekstx);
+        escapetekstVBox.setAlignment(Pos.CENTER);
 
-        PeaPane1.setTop(escapetekstHBox);
-
-
+        PeaPane1.setTop(escapetekstVBox);
 
 
         juur.getChildren().addAll(PeaPane1);
-        Scene stseen1 = new Scene(juur, 700, 300, Color.SNOW);
+        Scene stseen1 = new Scene(juur, 1000, 400, Color.SNOW);
+        peaLava.setMinHeight(400);
+        peaLava.setMinWidth(1000);
         stseen1.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.ESCAPE){ //https://stackoverflow.com/questions/33224161/how-do-i-run-a-function-on-a-specific-key-press-in-javafx
+            if (event.getCode() == KeyCode.ESCAPE) { //https://stackoverflow.com/questions/33224161/how-do-i-run-a-function-on-a-specific-key-press-in-javafx
                 System.exit(0);
             }
         });
         stseen1.widthProperty().addListener((observable, oldvalue, newvalue) -> {
-                PeaPane1.setMinWidth((Double)newvalue);
+                    PeaPane1.setMinWidth((Double) newvalue);
                 }
         );
         stseen1.heightProperty().addListener((observable, oldvalue, newvalue) -> {
-                    PeaPane1.setMinHeight((Double)newvalue);
+                    PeaPane1.setMinHeight((Double) newvalue);
                 }
         );
-
-
-
-
 
 
         //Loome 2 Event objekti:
@@ -167,31 +155,31 @@ public class Kalender extends Application {
         String praegunePäev = tänanekuupäevjupid[1];
         String praeguneAasta = tänanekuupäevjupid[3];
         String praeguneKuu = "";
-        if(tänanekuupäevjupid[2].equals("jaanuar"))
+        if (tänanekuupäevjupid[2].equals("jaanuar"))
             praeguneKuu = "01";
-        if(tänanekuupäevjupid[2].equals("veebruar"))
+        if (tänanekuupäevjupid[2].equals("veebruar"))
             praeguneKuu = "02";
-        if(tänanekuupäevjupid[2].equals("märts"))
+        if (tänanekuupäevjupid[2].equals("märts"))
             praeguneKuu = "03";
-        if(tänanekuupäevjupid[2].equals("aprill"))
+        if (tänanekuupäevjupid[2].equals("aprill"))
             praeguneKuu = "04";
-        if(tänanekuupäevjupid[2].equals("mai"))
+        if (tänanekuupäevjupid[2].equals("mai"))
             praeguneKuu = "05";
-        if(tänanekuupäevjupid[2].equals("juuni"))
+        if (tänanekuupäevjupid[2].equals("juuni"))
             praeguneKuu = "06";
-        if(tänanekuupäevjupid[2].equals("juuli"))
+        if (tänanekuupäevjupid[2].equals("juuli"))
             praeguneKuu = "07";
-        if(tänanekuupäevjupid[2].equals("august"))
+        if (tänanekuupäevjupid[2].equals("august"))
             praeguneKuu = "08";
-        if(tänanekuupäevjupid[2].equals("september"))
+        if (tänanekuupäevjupid[2].equals("september"))
             praeguneKuu = "09";
-        if(tänanekuupäevjupid[2].equals("oktoober"))
+        if (tänanekuupäevjupid[2].equals("oktoober"))
             praeguneKuu = "10";
-        if(tänanekuupäevjupid[2].equals("november"))
+        if (tänanekuupäevjupid[2].equals("november"))
             praeguneKuu = "11";
-        if(tänanekuupäevjupid[2].equals("detsember"))
+        if (tänanekuupäevjupid[2].equals("detsember"))
             praeguneKuu = "12";
-        String praeguneKuupäev = praegunePäev+"."+praeguneKuu+"."+praeguneAasta;
+        String praeguneKuupäev = praegunePäev + "." + praeguneKuu + "." + praeguneAasta;
         Event praeguneHetk = new Event("", praeguneKuupäev, praegu.getKell(), new ArrayList<>()); //Praeguse hetke Event
         for (Event event : evendid) {
             if (event instanceof Meeldetuletus) { //Kui event on Meeldetuletus objekt, siis tal on meeldetuletuse aeg
@@ -204,130 +192,140 @@ public class Kalender extends Application {
                 String aasta = evendiMeeldetuletusjupid[5];
                 String päev = evendiMeeldetuletusjupid[2];
                 String kuu = "00";
-                if(evendiMeeldetuletusjupid[1].equals("Jan"))
+                if (evendiMeeldetuletusjupid[1].equals("Jan"))
                     kuu = "01";
-                if(evendiMeeldetuletusjupid[1].equals("Feb"))
+                if (evendiMeeldetuletusjupid[1].equals("Feb"))
                     kuu = "02";
-                if(evendiMeeldetuletusjupid[1].equals("Mar"))
+                if (evendiMeeldetuletusjupid[1].equals("Mar"))
                     kuu = "03";
-                if(evendiMeeldetuletusjupid[1].equals("Apr"))
+                if (evendiMeeldetuletusjupid[1].equals("Apr"))
                     kuu = "04";
-                if(evendiMeeldetuletusjupid[1].equals("May"))
+                if (evendiMeeldetuletusjupid[1].equals("May"))
                     kuu = "05";
-                if(evendiMeeldetuletusjupid[1].equals("Jun"))
+                if (evendiMeeldetuletusjupid[1].equals("Jun"))
                     kuu = "06";
-                if(evendiMeeldetuletusjupid[1].equals("Jul"))
+                if (evendiMeeldetuletusjupid[1].equals("Jul"))
                     kuu = "07";
-                if(evendiMeeldetuletusjupid[1].equals("Aug"))
+                if (evendiMeeldetuletusjupid[1].equals("Aug"))
                     kuu = "08";
-                if(evendiMeeldetuletusjupid[1].equals("Sep"))
+                if (evendiMeeldetuletusjupid[1].equals("Sep"))
                     kuu = "09";
-                if(evendiMeeldetuletusjupid[1].equals("Oct"))
+                if (evendiMeeldetuletusjupid[1].equals("Oct"))
                     kuu = "10";
-                if(evendiMeeldetuletusjupid[1].equals("Nov"))
+                if (evendiMeeldetuletusjupid[1].equals("Nov"))
                     kuu = "11";
-                if(evendiMeeldetuletusjupid[1].equals("Dec"))
+                if (evendiMeeldetuletusjupid[1].equals("Dec"))
                     kuu = "12";
 
-                String meeldetuletuseKuupäev = päev+"."+kuu+"."+aasta;
+                String meeldetuletuseKuupäev = päev + "." + kuu + "." + aasta;
                 Event evendiMeeldetuletusEvendina = new Event("", meeldetuletuseKuupäev, meeldetuletuseAeg, new ArrayList<>()); //Event, kus kuupäeva ja aja asemel on meeldetuletuse kuupäev ja aeg.
                 //Neid kahte Eventi saab võrrelda.
                 if (evendiMeeldetuletusEvendina.compareTo(praeguneHetk) == 1) { //Kui meeldetuletuse aeg pole veel möödas, loome timeri.
 
-                    long ajavahe = (evendiMeeldetuletus.getTime()-System.currentTimeMillis())/1000;
-                        Timeline mtimeline = new Timeline(new KeyFrame(Duration.seconds(ajavahe),
-                                meeldetuletuse -> {
-                                    Group meeldetuletusjuur = new Group();
-                                    Text meeldetuletustekst = new Text("MEELDETULETUS! " + event.toString());
-                                    meeldetuletustekst.setX(267);
-                                    meeldetuletustekst.setY(267);
-                                    meeldetuletusjuur.getChildren().add(meeldetuletustekst);
-                                    Button tagasinupp = new Button("Tagasi");
-                                    tagasinupp.setOnMouseClicked(e -> {
-                                        peaLava.setScene(stseen1);
-                                    });
-                                    meeldetuletusjuur.getChildren().add(tagasinupp);
-                                    Scene meeldetuletusStseen = new Scene(meeldetuletusjuur, 535, 535, Color.SNOW);
-                                    peaLava.setScene(meeldetuletusStseen);
-                                }));
+                    long ajavahe = (evendiMeeldetuletus.getTime() - System.currentTimeMillis()) / 1000;
+                    Timeline mtimeline = new Timeline(new KeyFrame(Duration.seconds(ajavahe),
+                            meeldetuletuse -> {
+                                meeldetuletustekstx.setVisible(true);
+                                meeldetuletustekstx.setFill(Color.CRIMSON);
+                                meeldetuletustekstx.setText("Meeldetuletus! " + event);
+                            }));
 
-                        mtimeline.setCycleCount(Animation.INDEFINITE);
-                        mtimeline.play();
-                    }
+                    mtimeline.setCycleCount(Animation.INDEFINITE);
+                    mtimeline.play();
+                }
             }
         }
 
 
-        nupp1.setOnMouseClicked(event ->{
+        nupp1.setOnMouseClicked(event -> {
             Group lisamisejuur = new Group();
-
-            TextField nimifield = new TextField("Sisesta ürituse nimi");
-            TextField kuupäevfield = new TextField("Sisesta kuupäev kujul päev.kuu.aasta");
-            TextField aegfield = new TextField("Sisesta aeg kujul tunnid:minutid, kui soovite lasta programmil aja valida, sisestage \"suvaline\"");
-            TextField detailidfield = new TextField("Sisestage detailid (kui neid pole, jätke lahter tühjaks");
-            TextField meeldetuletusfield = new TextField("Sisestage meeldetuletuse aeg formaadis aasta-kuu-päev at tund:minut:sekund (näiteks 2021-12-01 at 12:00:00) (kui meeldetuletust ei taha, jätke lahter tühjaks)");
+            Text niminimi = new Text("Sisesta ürituse nimi");
+            TextField nimifield = new TextField();
+            Text kuupäevfieldnimi = new Text("Sisesta kuupäev kujul päev.kuu.aasta");
+            TextField kuupäevfield = new TextField();
+            Text aegfieldnimi = new Text("Sisesta aeg kujul tunnid:minutid, kui soovite lasta programmil aja valida, sisestage \"suvaline\"");
+            TextField aegfield = new TextField();
+            Text detailidfieldnimi = new Text("Sisestage detailid (kui neid pole, jätke lahter tühjaks");
+            TextField detailidfield = new TextField();
+            Text meeldetuletusfieldnimi = new Text("Sisestage meeldetuletuse aeg formaadis aasta-kuu-päev at tund:minut:sekund (näiteks 2021-12-01 at 12:00:00) (kui meeldetuletust ei taha, jätke lahter tühjaks)");
+            TextField meeldetuletusfield = new TextField();
             Button lisamisenupp = new Button("Lisa sündmus");
+            nimifield.setAlignment(Pos.CENTER);
+            kuupäevfield.setAlignment(Pos.CENTER);
+            aegfield.setAlignment(Pos.CENTER);
+            detailidfield.setAlignment(Pos.CENTER);
+            meeldetuletusfield.setAlignment(Pos.CENTER);
             lisamisenupp.setOnMouseClicked(e -> {
                 String nimi = nimifield.getText();
                 String päev = kuupäevfield.getText();
                 String aeg = aegfield.getText();
-                if(aeg.equals("suvaline")){
+                if (aeg.equals("suvaline")) {
                     aeg = suvalineAeg();
                 }
                 String detail = detailidfield.getText();
                 String meeldetuletus = meeldetuletusfield.getText();
                 ArrayList<String> detailidelist = new ArrayList<String>();
-                if(!detail.equals("")){
+                if (!detail.equals("")) {
                     detailidelist.add(detail);
                 }
-                if(meeldetuletus.equals("")){
+                if (meeldetuletus.equals("")) {
                     Event uus = new Event(nimi, päev, aeg, detailidelist);
                     evendid.add(uus);
-                }
-                else{
+                } else {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
                     Date meeldetuletuseAeg = new Date();
                     try {
                         meeldetuletuseAeg = format.parse("0000-01-01 at 00:00:00");
-                    }
-                    catch(ParseException pe){
+                    } catch (ParseException pe) {
                         System.out.println(nimifield.getText());
                     }
                     Meeldetuletus uus2 = new Meeldetuletus(nimi, päev, aeg, detailidelist, meeldetuletuseAeg);
                     Date meeldetuletusaeg = new Date();
                     try {
                         meeldetuletusaeg = format.parse(meeldetuletus);
-                    }
-                    catch(ParseException pe){
+                    } catch (ParseException pe) {
                         System.out.println(detailidfield.getText());
                     }
                     uus2.setMeeldetuletuseAeg(meeldetuletusaeg);
                     evendid.add(uus2);
 
                 }
+                try {
+                    FileWriter evendiKirjutaja = new FileWriter("evendid.txt");
+                    for (Event event1 : evendid) {
+                        evendiKirjutaja.write(event1.toString());
+                    }
+
+                    evendiKirjutaja.close();
+                    System.out.println("Kirjutasin evendid faili.");
+                } catch (IOException IOE) {
+                    System.out.println("Error faili kirjutamisel.");
+                    IOE.printStackTrace();
+                }
                 peaLava.setScene(stseen1);
             });
             VBox lisamiseVBox = new VBox(8);
             Text lisamiseescapetekst = new Text("Tagasi minemiseks vajutage ESC.");
-            lisamiseVBox.getChildren().addAll(lisamiseescapetekst, nimifield, kuupäevfield, aegfield, detailidfield, meeldetuletusfield, lisamisenupp);
+
+            lisamiseVBox.getChildren().addAll(lisamiseescapetekst, new Text(), niminimi, nimifield, kuupäevfieldnimi, kuupäevfield, aegfieldnimi, aegfield, detailidfieldnimi, detailidfield, meeldetuletusfieldnimi, meeldetuletusfield, lisamisenupp);
 
 
             BorderPane lisamisepane = new BorderPane();
-            lisamisepane.setMinWidth(900);
-            lisamisepane.setMinHeight(300);
+            lisamisepane.setMinWidth(1000);
+            lisamisepane.setMinHeight(400);
+            lisamiseVBox.setAlignment(Pos.CENTER);
             lisamisepane.setCenter(lisamiseVBox);
-
-
             lisamisejuur.getChildren().add(lisamisepane);
 
-            Scene lisamisestseen = new Scene(lisamisejuur, 900, 300, Color.SNOW);
+            Scene lisamisestseen = new Scene(lisamisejuur, 1000, 400, Color.SNOW);
             lisamisestseen.widthProperty().addListener((observable, oldvalue, newvalue) -> {
-                        lisamisepane.setMinWidth((Double)newvalue);
+                        //lisamisepane.setMinWidth((Double) newvalue);
                     }
             );
 
             lisamisestseen.heightProperty().addListener((observable, oldvalue, newvalue) -> {
-                        Double muutus = (Double)newvalue/(Double)oldvalue;
+                        lisamisepane.setMinHeight((Double) newvalue);
+                        /*Double muutus = (Double)newvalue/(Double)oldvalue;
                         nimifield.setMinHeight(nimifield.getHeight() * muutus);
                         kuupäevfield.setMinHeight(kuupäevfield.getHeight() * muutus);
                         aegfield.setMinHeight(aegfield.getHeight() * muutus);
@@ -335,42 +333,28 @@ public class Kalender extends Application {
                         meeldetuletusfield.setMinHeight(meeldetuletusfield.getHeight() * muutus);
                         lisamisenupp.setMinHeight(lisamisenupp.getHeight() * muutus);
                         //Buggib
+                        */
                     }
             );
             lisamisestseen.setOnKeyPressed(xy -> {
-                if(xy.getCode() == KeyCode.ESCAPE){
+                if (xy.getCode() == KeyCode.ESCAPE) {
                     peaLava.setScene(stseen1);
                 }
             });
             peaLava.setScene(lisamisestseen);
         });
 
-        nupp2.setOnMouseClicked(e -> {
-            try {
-                FileWriter evendiKirjutaja = new FileWriter("evendid.txt");
-                for (Event event:evendid) {
-                    evendiKirjutaja.write(event.toString());
-                }
-
-                evendiKirjutaja.close();
-                System.out.println("Kirjutasin evendid faili.");
-            } catch (IOException IOE) {
-                System.out.println("Error faili kirjutamisel.");
-                IOE.printStackTrace();
-            }
-        });
-
-        nupp3.setOnMouseClicked(event ->{
+        nupp3.setOnMouseClicked(event -> {
             Collections.sort(evendid);
             Group vjuur = new Group();
             BorderPane vpane = new BorderPane();
-            vpane.setMinWidth(600);
-            vpane.setMinHeight(535);
+            vpane.setMinWidth(1000);
+            vpane.setMinHeight(400);
 
             VBox vVBox = new VBox(8);
-            double fontsuurus = (vpane.getHeight()-100)/evendid.size();
-            for (int i=0; i<evendid.size();i++) {
-                Text t = new Text(""+evendid.get(i));
+            double fontsuurus = (vpane.getHeight() - 100) / evendid.size();
+            for (int i = 0; i < evendid.size(); i++) {
+                Text t = new Text("" + evendid.get(i));
                 t.setFont(new Font(fontsuurus));
                 vVBox.getChildren().add(t);
             }
@@ -382,19 +366,157 @@ public class Kalender extends Application {
 
             vjuur.getChildren().add(vpane);
 
-            Scene väljastus = new Scene(vjuur, 600, 535, Color.SNOW);
+            Scene väljastus = new Scene(vjuur, 1000, 400, Color.SNOW);
 
             väljastus.widthProperty().addListener((observable, oldvalue, newvalue) -> {
-                        vVBox.setMinWidth((Double)newvalue);
+                        vVBox.setMinWidth((Double) newvalue);
                     }
             );
             väljastus.heightProperty().addListener((observable, oldvalue, newvalue) -> {
-                        vVBox.setMinHeight((Double)newvalue);
+                        vVBox.setMinHeight((Double) newvalue);
                     }
             );
 
             peaLava.setScene(väljastus);
         });
+        nupp4.setOnMouseClicked(event -> {
+            Collections.sort(evendid);
+            Group mjuur = new Group();
+            BorderPane mpane = new BorderPane();
+            mpane.setMinWidth(1000);
+            mpane.setMinHeight(400);
+
+            VBox mVBox = new VBox(8);
+            double fontsuurus = (mpane.getHeight() - 100) / evendid.size();
+            for (int i = 0; i < evendid.size(); i++) {
+                TextField t = new TextField("" + evendid.get(i));
+                t.setFont(new Font(fontsuurus));
+                t.setAlignment(Pos.CENTER);
+                mVBox.getChildren().add(t);
+            }
+            Button salvesta = new Button("Salvesta ja tagasi");
+            salvesta.setOnMouseClicked(e -> {
+                int i = 0;
+                try (FileWriter evendiKirjutaja = new FileWriter("evendid.txt");) {
+                    for (Node child : mVBox.getChildren()) {
+                        if (child instanceof TextField) {
+
+                            System.out.println(((TextField) child).getText());
+                            String evenditekst = ((TextField) child).getText();
+                            evendiKirjutaja.write(evenditekst + System.lineSeparator());
+                        }
+                    }
+                    i++;
+                } catch (IOException IOE) {
+                    IOE.printStackTrace();
+                }
+                evendid.clear();
+                try { //Tekitab eventide tekstifaili või loeb evendid listi.
+                    File evendidFail = new File("evendid.txt");
+                    if (evendidFail.createNewFile()) {
+                        System.out.println("File tehtud: " + evendidFail.getName());
+                    } else {
+                        System.out.println("Fail on olemas, loen evendid programmi");
+                        FileInputStream evendidInput = new FileInputStream("evendid.txt");
+                        Scanner sc = new Scanner(evendidInput);    //file to be scanned
+                        while (sc.hasNextLine()) {
+                            String rida = sc.nextLine();
+                            String[] tükid = rida.split("; ");
+                            String asenda1 = tükid[3].replace("[", "");
+                            String asenda2 = asenda1.replace("]", "");
+                            ArrayList<String> detailidFailist = new ArrayList<String>(Arrays.asList(asenda2.split(", ")));
+                            if (tükid.length == 4) {
+                                Event failistLoetudEvent = new Event(tükid[0], tükid[1], tükid[2], detailidFailist);
+                                evendid.add(failistLoetudEvent);
+                            } else { //meeldetuletus on ka lisaks muule
+                                SimpleDateFormat failistFormaat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+                                Date meeldetuletusFailist = failistFormaat.parse(tükid[4]);
+                                Meeldetuletus failistLoetudEvent = new Meeldetuletus(tükid[0], tükid[1], tükid[2], detailidFailist, meeldetuletusFailist);
+                                evendid.add(failistLoetudEvent);
+                            }
+                        }
+                    }
+                } catch (IOException | ParseException a) {
+                    System.out.println("Error faili tegemisel");
+                    a.printStackTrace();
+                }
+                peaLava.setScene(stseen1);
+            });
+            mVBox.getChildren().add(salvesta);
+            mVBox.setAlignment(Pos.CENTER);
+            mpane.setCenter(mVBox);
+
+            mjuur.getChildren().add(mpane);
+
+            Scene muuda = new Scene(mjuur, 1000, 400, Color.SNOW);
+
+            muuda.widthProperty().addListener((observable, oldvalue, newvalue) -> {
+                        mVBox.setMinWidth((Double) newvalue);
+                    }
+            );
+            muuda.heightProperty().addListener((observable, oldvalue, newvalue) -> {
+                        mVBox.setMinHeight((Double) newvalue);
+                    }
+            );
+            peaLava.setScene(muuda);
+        });
+
+        nupp5.setOnMouseClicked(event -> {
+            Collections.sort(evendid);
+            Group kjuur = new Group();
+            BorderPane kpane = new BorderPane();
+            kpane.setMinWidth(1000);
+            kpane.setMinHeight(400);
+
+            VBox kVBox = new VBox(8);
+            double fontsuurus = (kpane.getHeight() - 100) / evendid.size();
+            for (int i = 0; i < evendid.size(); i++) {
+                Button t = new Button("" + evendid.get(i));
+                Event x = evendid.get(i);
+                t.setFont(new Font(fontsuurus));
+                t.setOnMouseClicked(event1 -> {
+                    evendid.remove(x);
+
+                    t.setVisible(false);
+                });
+                kVBox.getChildren().add(t);
+            }
+            Button tagasi = new Button("Tagasi");
+            tagasi.setOnMouseClicked(e -> {
+                try {
+                    FileWriter evendiKirjutaja = new FileWriter("evendid.txt");
+                    for (Event event1 : evendid) {
+                        evendiKirjutaja.write(event1.toString());
+                    }
+
+                    evendiKirjutaja.close();
+                    System.out.println("Kirjutasin evendid faili.");
+                } catch (IOException IOE) {
+                    System.out.println("Error faili kirjutamisel.");
+                    IOE.printStackTrace();
+                }
+                peaLava.setScene(stseen1);
+            });
+            kVBox.getChildren().add(tagasi);
+            kVBox.setAlignment(Pos.CENTER);
+            kpane.setCenter(kVBox);
+
+            kjuur.getChildren().add(kpane);
+
+            Scene kustuta = new Scene(kjuur, 1000, 400, Color.SNOW);
+
+            kustuta.widthProperty().addListener((observable, oldvalue, newvalue) -> {
+                        kVBox.setMinWidth((Double) newvalue);
+                    }
+            );
+            kustuta.heightProperty().addListener((observable, oldvalue, newvalue) -> {
+                        kVBox.setMinHeight((Double) newvalue);
+                    }
+            );
+
+            peaLava.setScene(kustuta);
+        });
+
         peaLava.setTitle("Kalender");
         peaLava.setScene(stseen1);
         peaLava.show();
@@ -715,7 +837,8 @@ public class Kalender extends Application {
         }*/
 
     }
-    public static void meetod() throws Exception{
+
+    public static void meetod() throws Exception {
         Kell kell = new Kell();
         Kuupäev kuupäev = new Kuupäev();
         String state = new String();
@@ -729,19 +852,18 @@ public class Kalender extends Application {
                 System.out.println("File tehtud: " + evendidFail.getName());
             } else {
                 System.out.println("Fail on olemas, loen evendid programmi");
-                FileInputStream evendidInput=new FileInputStream("evendid.txt");
-                Scanner sc=new Scanner(evendidInput);    //file to be scanned
-                while(sc.hasNextLine()){
+                FileInputStream evendidInput = new FileInputStream("evendid.txt");
+                Scanner sc = new Scanner(evendidInput);    //file to be scanned
+                while (sc.hasNextLine()) {
                     String rida = sc.nextLine();
                     String[] tükid = rida.split("; ");
-                    String asenda1 = tükid[3].replace("[","");
-                    String asenda2 = asenda1.replace("]","");
+                    String asenda1 = tükid[3].replace("[", "");
+                    String asenda2 = asenda1.replace("]", "");
                     ArrayList<String> detailidFailist = new ArrayList<String>(Arrays.asList(asenda2.split(", ")));
-                    if(tükid.length==4) {
+                    if (tükid.length == 4) {
                         Event failistLoetudEvent = new Event(tükid[0], tükid[1], tükid[2], detailidFailist);
                         evendid.add(failistLoetudEvent);
-                    }
-                    else{ //meeldetuletus on ka lisaks muule
+                    } else { //meeldetuletus on ka lisaks muule
                         SimpleDateFormat failistFormaat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                         Date meeldetuletusFailist = failistFormaat.parse(tükid[4]);
                         Meeldetuletus failistLoetudEvent = new Meeldetuletus(tükid[0], tükid[1], tükid[2], detailidFailist, meeldetuletusFailist);
@@ -753,7 +875,6 @@ public class Kalender extends Application {
             System.out.println("Error faili tegemisel");
             e.printStackTrace();
         }
-
 
 
         System.out.println("KALENDER");
@@ -768,7 +889,6 @@ public class Kalender extends Application {
         System.out.println("Sündmuse kustutamiseks sisestage \"kustuta\"");
 
 
-
         while (true) {
 
             //Loome 2 Event objekti:
@@ -781,31 +901,31 @@ public class Kalender extends Application {
             String praegunePäev = tänanekuupäevjupid[1];
             String praeguneAasta = tänanekuupäevjupid[3];
             String praeguneKuu = "";
-            if(tänanekuupäevjupid[2].equals("jaanuar"))
+            if (tänanekuupäevjupid[2].equals("jaanuar"))
                 praeguneKuu = "01";
-            if(tänanekuupäevjupid[2].equals("veebruar"))
+            if (tänanekuupäevjupid[2].equals("veebruar"))
                 praeguneKuu = "02";
-            if(tänanekuupäevjupid[2].equals("märts"))
+            if (tänanekuupäevjupid[2].equals("märts"))
                 praeguneKuu = "03";
-            if(tänanekuupäevjupid[2].equals("aprill"))
+            if (tänanekuupäevjupid[2].equals("aprill"))
                 praeguneKuu = "04";
-            if(tänanekuupäevjupid[2].equals("mai"))
+            if (tänanekuupäevjupid[2].equals("mai"))
                 praeguneKuu = "05";
-            if(tänanekuupäevjupid[2].equals("juuni"))
+            if (tänanekuupäevjupid[2].equals("juuni"))
                 praeguneKuu = "06";
-            if(tänanekuupäevjupid[2].equals("juuli"))
+            if (tänanekuupäevjupid[2].equals("juuli"))
                 praeguneKuu = "07";
-            if(tänanekuupäevjupid[2].equals("august"))
+            if (tänanekuupäevjupid[2].equals("august"))
                 praeguneKuu = "08";
-            if(tänanekuupäevjupid[2].equals("september"))
+            if (tänanekuupäevjupid[2].equals("september"))
                 praeguneKuu = "09";
-            if(tänanekuupäevjupid[2].equals("oktoober"))
+            if (tänanekuupäevjupid[2].equals("oktoober"))
                 praeguneKuu = "10";
-            if(tänanekuupäevjupid[2].equals("november"))
+            if (tänanekuupäevjupid[2].equals("november"))
                 praeguneKuu = "11";
-            if(tänanekuupäevjupid[2].equals("detsember"))
+            if (tänanekuupäevjupid[2].equals("detsember"))
                 praeguneKuu = "12";
-            String praeguneKuupäev = praegunePäev+"."+praeguneKuu+"."+praeguneAasta;
+            String praeguneKuupäev = praegunePäev + "." + praeguneKuu + "." + praeguneAasta;
             Event praeguneHetk = new Event("", praeguneKuupäev, praegu.getKell(), new ArrayList<>()); //Praeguse hetke Event
             for (Event event : evendid) {
                 if (event instanceof Meeldetuletus) { //Kui event on Meeldetuletus objekt, siis tal on meeldetuletuse aeg
@@ -818,32 +938,32 @@ public class Kalender extends Application {
                     String aasta = evendiMeeldetuletusjupid[5];
                     String päev = evendiMeeldetuletusjupid[2];
                     String kuu = "00";
-                    if(evendiMeeldetuletusjupid[1].equals("Jan"))
+                    if (evendiMeeldetuletusjupid[1].equals("Jan"))
                         kuu = "01";
-                    if(evendiMeeldetuletusjupid[1].equals("Feb"))
+                    if (evendiMeeldetuletusjupid[1].equals("Feb"))
                         kuu = "02";
-                    if(evendiMeeldetuletusjupid[1].equals("Mar"))
+                    if (evendiMeeldetuletusjupid[1].equals("Mar"))
                         kuu = "03";
-                    if(evendiMeeldetuletusjupid[1].equals("Apr"))
+                    if (evendiMeeldetuletusjupid[1].equals("Apr"))
                         kuu = "04";
-                    if(evendiMeeldetuletusjupid[1].equals("May"))
+                    if (evendiMeeldetuletusjupid[1].equals("May"))
                         kuu = "05";
-                    if(evendiMeeldetuletusjupid[1].equals("Jun"))
+                    if (evendiMeeldetuletusjupid[1].equals("Jun"))
                         kuu = "06";
-                    if(evendiMeeldetuletusjupid[1].equals("Jul"))
+                    if (evendiMeeldetuletusjupid[1].equals("Jul"))
                         kuu = "07";
-                    if(evendiMeeldetuletusjupid[1].equals("Aug"))
+                    if (evendiMeeldetuletusjupid[1].equals("Aug"))
                         kuu = "08";
-                    if(evendiMeeldetuletusjupid[1].equals("Sep"))
+                    if (evendiMeeldetuletusjupid[1].equals("Sep"))
                         kuu = "09";
-                    if(evendiMeeldetuletusjupid[1].equals("Oct"))
+                    if (evendiMeeldetuletusjupid[1].equals("Oct"))
                         kuu = "10";
-                    if(evendiMeeldetuletusjupid[1].equals("Nov"))
+                    if (evendiMeeldetuletusjupid[1].equals("Nov"))
                         kuu = "11";
-                    if(evendiMeeldetuletusjupid[1].equals("Dec"))
+                    if (evendiMeeldetuletusjupid[1].equals("Dec"))
                         kuu = "12";
 
-                    String meeldetuletuseKuupäev = päev+"."+kuu+"."+aasta;
+                    String meeldetuletuseKuupäev = päev + "." + kuu + "." + aasta;
                     Event evendiMeeldetuletusEvendina = new Event("", meeldetuletuseKuupäev, meeldetuletuseAeg, new ArrayList<>()); //Event, kus kuupäeva ja aja asemel on meeldetuletuse kuupäev ja aeg.
                     //Neid kahte Eventi saab võrrelda.
                     if (evendiMeeldetuletusEvendina.compareTo(praeguneHetk) == 1) { //Kui meeldetuletuse aeg pole veel möödas, loome timeri.
@@ -865,17 +985,15 @@ public class Kalender extends Application {
                 System.out.println();
                 state = scanner.nextLine(); //Mis state järgmises tsüklis läheb
                 System.out.println("Valisite: " + state);
-            }
-            else if (state.equals("kell")) {
+            } else if (state.equals("kell")) {
                 System.out.print("\r" + kell.getKell());
                 System.out.println();
                 state = scanner.nextLine(); //Mis state järgmises tsüklis läheb
                 System.out.println("Valisite: " + state);
-            }
-            else if(state.equals("salvesta")){
+            } else if (state.equals("salvesta")) {
                 try {
                     FileWriter evendiKirjutaja = new FileWriter("evendid.txt");
-                    for (Event event:evendid) {
+                    for (Event event : evendid) {
                         evendiKirjutaja.write(event.toString());
                     }
 
@@ -885,9 +1003,8 @@ public class Kalender extends Application {
                     System.out.println("Error faili kirjutamisel.");
                     e.printStackTrace();
                 }
-                state="";
-            }
-            else if (state.equals("lisa")) {
+                state = "";
+            } else if (state.equals("lisa")) {
 
                 System.out.println();
                 System.out.println("Sisesta ürituse nimi: ");
@@ -897,9 +1014,9 @@ public class Kalender extends Application {
                 System.out.println("Sisesta aeg kujul tunnid:minutid, kui soovite lasta programmil aja valida, sisestage \"suvaline\": ");
                 String aegvastus = scanner.nextLine();
                 String aeg = aegvastus;
-                if(aegvastus.equals("suvaline")){
+                if (aegvastus.equals("suvaline")) {
                     aeg = suvalineAeg();
-                    System.out.println("Arvuti valis ajaks: "+aeg);
+                    System.out.println("Arvuti valis ajaks: " + aeg);
                 }
                 System.out.println("Kas soovite lisada detaile (jah/ei)?: ");
                 String vastus = scanner.nextLine();
@@ -908,134 +1025,119 @@ public class Kalender extends Application {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
                 Date meeldetuletuseAeg = format.parse("0000-01-01 at 00:00:00");
                 Meeldetuletus uus2 = new Meeldetuletus(nimi, päev, aeg, detailidelist, meeldetuletuseAeg);
-                if(vastus.equals("jah")){
+                if (vastus.equals("jah")) {
                     boolean tingimus = true;
                     System.out.println("Sisestage ükshaaval detaile. Kui rohkem pole vaja lisada, kirjutage \"lõpeta\"");
-                    while(tingimus){
+                    while (tingimus) {
                         String detailvastus = scanner.nextLine();
-                        if(detailvastus.equals("lõpeta")){
+                        if (detailvastus.equals("lõpeta")) {
                             tingimus = false;
                             break;
-                        }
-                        else{
+                        } else {
                             uus2.lisaDetail(detailvastus); //uus2-le lisamine lisab ka uus-le
                         }
                     }
                 }
                 System.out.println("Kas soovite lisada meeldetuletuse (jah/ei) ?: ");
                 String meeldetuletusjahei = scanner.nextLine();
-                if(meeldetuletusjahei.equals("ei")) {
+                if (meeldetuletusjahei.equals("ei")) {
                     evendid.add(uus);
-                }
-                else if(meeldetuletusjahei.equals("jah")){
+                } else if (meeldetuletusjahei.equals("jah")) {
                     System.out.println("Sisestage meeldetuletuse aeg formaadis aasta-kuu-päev at tund:minut:sekund (näiteks 2021-12-01 at 12:00:00): ");
                     String meeldetuletusaegvastus = scanner.nextLine();
                     Date meeldetuletusaeg = format.parse(meeldetuletusaegvastus);
                     uus2.setMeeldetuletuseAeg(meeldetuletusaeg);
                     evendid.add(uus2);
-                }
-                else{
+                } else {
                     System.out.println("Vigane sisestus.");
                 }
                 System.out.println(evendid);
                 state = ""; //Esialgsesse state tagasi
-            }
-            else if (state.equals("väljasta")) {
+            } else if (state.equals("väljasta")) {
                 Collections.sort(evendid);
                 System.out.println(evendid);
                 state = "";
-            }
-            else if (state.equals("kustuta")){
+            } else if (state.equals("kustuta")) {
                 System.out.println("Millist sündmust soovite kustutada(sisestage nimi või indeks): ");
                 String kustutaVastus = scanner.nextLine();
-                try{
+                try {
                     evendid.remove(Integer.parseInt(kustutaVastus)); //indeksi järgi kustutamine
-                }
-                catch(Exception d){  //Kui ei suuda sisestatud teksti arvuks muuta.
+                } catch (Exception d) {  //Kui ei suuda sisestatud teksti arvuks muuta.
                     for (Event event : evendid) { //nime järgi kustutamine
-                        if(event.getNimi().equals(kustutaVastus)){
+                        if (event.getNimi().equals(kustutaVastus)) {
                             evendid.remove(event);
                             break;
                         }
                     }
                 }
-                state="";
-            }
-            else if(state.equals("muuda")){
+                state = "";
+            } else if (state.equals("muuda")) {
                 System.out.println("Sisestage sündmuse nimi, mida soovite muuta: ");
                 String muudetavaNimi = scanner.nextLine();
                 boolean lõpetamiseTingimus = false;
-                while(lõpetamiseTingimus==false) {
+                while (lõpetamiseTingimus == false) {
                     System.out.println("Sündmuse muutmise lõpetamiseks sisestage: \"lõpeta\"");
                     System.out.println("Mida soovite sündmuse juures muuta (sisestage \"nimi\", \"kuupäev\", \"aeg\", \"detail\" või \"meeldetuletus\")");
                     String muutmisevastus = scanner.nextLine();
                     if (muutmisevastus.equals("lõpeta")) {
-                        lõpetamiseTingimus=true;
+                        lõpetamiseTingimus = true;
                         break;
-                    }
-                    else if (muutmisevastus.equals("nimi")){
+                    } else if (muutmisevastus.equals("nimi")) {
                         System.out.println("Sisestage uus nimi: ");
                         String uusnimi = scanner.nextLine();
                         for (Event event : evendid) {
-                            if(event.getNimi().equals(muudetavaNimi)){
+                            if (event.getNimi().equals(muudetavaNimi)) {
                                 event.setNimi(uusnimi);
                             }
                         }
-                    }
-                    else if (muutmisevastus.equals("kuupäev")){
+                    } else if (muutmisevastus.equals("kuupäev")) {
                         System.out.println("Sisestage uus kuupäev kujul päev.kuu.aasta: ");
                         String uuskuupäev = scanner.nextLine();
                         for (Event event : evendid) {
-                            if(event.getNimi().equals(muudetavaNimi)){
+                            if (event.getNimi().equals(muudetavaNimi)) {
                                 event.setKuupäev(uuskuupäev);
                             }
                         }
-                    }
-                    else if (muutmisevastus.equals("aeg")){
+                    } else if (muutmisevastus.equals("aeg")) {
                         System.out.println("Sisestage uus aeg kujul tunnid:minutid: ");
                         String uusaeg = scanner.nextLine();
                         for (Event event : evendid) {
-                            if(event.getNimi().equals(muudetavaNimi)){
+                            if (event.getNimi().equals(muudetavaNimi)) {
                                 event.setAeg(uusaeg);
                             }
                         }
-                    }
-                    else if (muutmisevastus.equals("detail")){
+                    } else if (muutmisevastus.equals("detail")) {
                         System.out.println("Kas soovite detaili lisada või kustutada (\"lisa\"/\"kustuta\"): ");
                         String detailimuutmisevastus = scanner.nextLine();
-                        if (detailimuutmisevastus.equals("lisa")){
+                        if (detailimuutmisevastus.equals("lisa")) {
                             System.out.println("Sisestage lisatav detail: ");
                             String uusdetail = scanner.nextLine();
                             for (Event event : evendid) {
-                                if(event.getNimi().equals(muudetavaNimi)){
+                                if (event.getNimi().equals(muudetavaNimi)) {
                                     event.lisaDetail(uusdetail);
                                 }
                             }
-                        }
-                        else if (detailimuutmisevastus.equals("kustuta")){
+                        } else if (detailimuutmisevastus.equals("kustuta")) {
                             System.out.println("Sisestage kustutatav detail kas nime või indeksi järgi: ");
                             String kustutatavdetail = scanner.nextLine();
-                            try{
+                            try {
                                 int kustutatavaindeks = Integer.parseInt(kustutatavdetail);
                                 for (Event event : evendid) {
-                                    if(event.getNimi().equals(muudetavaNimi)){
+                                    if (event.getNimi().equals(muudetavaNimi)) {
                                         event.kustutaDetail(kustutatavaindeks);
                                     }
                                 }
-                            }
-                            catch(Exception e){
+                            } catch (Exception e) {
                                 for (Event event : evendid) {
-                                    if(event.getNimi().equals(muudetavaNimi)){
+                                    if (event.getNimi().equals(muudetavaNimi)) {
                                         event.kustutaDetail(kustutatavdetail);
                                     }
                                 }
                             }
-                        }
-                        else{
+                        } else {
                             System.out.println("Vigane sisestus.");
                         }
-                    }
-                    else if (muutmisevastus.equals("meeldetuletus")){
+                    } else if (muutmisevastus.equals("meeldetuletus")) {
                         //Loo uus Meeldetuletus, kustuta vana event ja pane asemele Meeldetuletus
                         System.out.println("Sisestage meeldetuletuse aeg kujul aasta-kuu-päev at tund:minut:sekund");
                         String Mvastus = scanner.nextLine();
@@ -1047,7 +1149,7 @@ public class Kalender extends Application {
                         ArrayList<String> Mdetailid = new ArrayList<>();
 
                         for (Event event : evendid) {
-                            if(event.getNimi().equals(muudetavaNimi)){
+                            if (event.getNimi().equals(muudetavaNimi)) {
                                 Mnimi = event.getNimi();
                                 Mkuupäev = event.getKuupäev();
                                 Maeg = event.getAeg();
@@ -1058,14 +1160,12 @@ public class Kalender extends Application {
                         }
                         Meeldetuletus uusM = new Meeldetuletus(Mnimi, Mkuupäev, Maeg, Mdetailid, Mmeeldetuletus);
                         evendid.add(uusM); //lisame asemele Meeldetuletuse
-                    }
-                    else{
+                    } else {
                         System.out.println("Vigane sisestus.");
                     }
                 }
                 state = "";
-            }
-            else{
+            } else {
                 state = ""; //Kui kirjutatakse mingi suvaline käsklus siis läheb ka esialgsesse state tagasi
                 try {
                     Thread.sleep(1000);
@@ -1077,11 +1177,10 @@ public class Kalender extends Application {
     }
 
 
-
-    public static String suvalineAeg(){ //Tagastab suvalise kellaaja.
-        int tund = (int)(Math.random()*25);
-        int minut = (int)(Math.random()*61);
-        String tagastatav = tund+":"+minut;
+    public static String suvalineAeg() { //Tagastab suvalise kellaaja.
+        int tund = (int) (Math.random() * 25);
+        int minut = (int) (Math.random() * 61);
+        String tagastatav = tund + ":" + minut;
         return tagastatav;
     }
 }

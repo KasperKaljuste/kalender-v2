@@ -6,16 +6,20 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -83,8 +87,6 @@ public class Kalender extends Application {
 
 
         Group juur = new Group();
-        TextField tekstiväli = new TextField("Sisestage käsk.");
-        GridPane pane = new GridPane();
 
         Button nupp1 = new Button("Lisa sündmus");
         Button nupp2 = new Button("Salvesta sündmused");
@@ -108,20 +110,47 @@ public class Kalender extends Application {
         timeline.play();
         clock.setMinHeight(50);
         clock.setMinWidth(50);
+        clock.setFont(Font.font(50));
+
+        BorderPane PeaPane1 = new BorderPane();
+        PeaPane1.setMinWidth(700);
+        PeaPane1.setMinHeight(300);
+        /*PeaPane1.add(clock, 0, 0);
+        pane.add(nupp1, 1, 2);
+        pane.add(nupp2, 2, 3);
+        pane.add(nupp3, 3, 4);
+        pane.add(nupp4, 4, 5);
+        pane.add(nupp5, 5, 6);*/
+        nupp1.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        nupp2.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        nupp3.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        nupp4.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        nupp5.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        HBox nupud = new HBox(8);
+        nupud.setPadding(new Insets(0, 0, 30, 0));
+        nupud.getChildren().addAll(nupp1, nupp2, nupp3, nupp4, nupp5);
+        PeaPane1.setCenter(clock);
+        nupud.setAlignment(Pos.CENTER);
+        PeaPane1.setBottom(nupud);
+
+        Text escapetekst = new Text("Programmi lõpetamiseks vajutage ESC nuppu.");
+        HBox escapetekstHBox = new HBox();
+        escapetekstHBox.getChildren().add(escapetekst);
+        escapetekstHBox.setAlignment(Pos.CENTER);
+
+        PeaPane1.setTop(escapetekstHBox);
 
 
 
-        pane.add(clock, 0, 0);
-        pane.add(nupp1, 1, 1);
-        pane.add(nupp2, 2, 1);
-        pane.add(nupp3, 3, 1);
-        pane.add(nupp4, 4, 1);
-        pane.add(nupp5, 5, 1);
 
 
-
-        juur.getChildren().add(pane);
+        juur.getChildren().addAll(PeaPane1);
         Scene stseen1 = new Scene(juur, 700, 300, Color.SNOW);
+        stseen1.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ESCAPE){ //https://stackoverflow.com/questions/33224161/how-do-i-run-a-function-on-a-specific-key-press-in-javafx
+                System.exit(0);
+            }
+        });
 
 
         Group juur2 = new Group();

@@ -44,11 +44,7 @@ public class Kalender extends Application {
     }
     @Override
     public void start(Stage peaLava) throws Exception {
-        Kell kell = new Kell();
-        Kuupäev kuupäev = new Kuupäev();
-        String state = new String();
-        state = ""; //Algne state on tühi ehk näitab kuupäeva
-        Scanner scanner = new Scanner(System.in);
+
         List<Event> evendid = new ArrayList<>();
 
         try { //Tekitab eventide tekstifaili või loeb evendid listi.
@@ -115,12 +111,7 @@ public class Kalender extends Application {
         BorderPane PeaPane1 = new BorderPane();
         PeaPane1.setMinWidth(700);
         PeaPane1.setMinHeight(300);
-        /*PeaPane1.add(clock, 0, 0);
-        pane.add(nupp1, 1, 2);
-        pane.add(nupp2, 2, 3);
-        pane.add(nupp3, 3, 4);
-        pane.add(nupp4, 4, 5);
-        pane.add(nupp5, 5, 6);*/
+
         nupp1.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         nupp2.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         nupp3.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -143,7 +134,6 @@ public class Kalender extends Application {
 
 
 
-
         juur.getChildren().addAll(PeaPane1);
         Scene stseen1 = new Scene(juur, 700, 300, Color.SNOW);
         stseen1.setOnKeyPressed(event -> {
@@ -151,12 +141,18 @@ public class Kalender extends Application {
                 System.exit(0);
             }
         });
+        stseen1.widthProperty().addListener((observable, oldvalue, newvalue) -> {
+                PeaPane1.setMinWidth((Double)newvalue);
+                }
+        );
+        stseen1.heightProperty().addListener((observable, oldvalue, newvalue) -> {
+                    PeaPane1.setMinHeight((Double)newvalue);
+                }
+        );
 
 
-        Group juur2 = new Group();
-        GridPane pane2 = new GridPane();
-        juur2.getChildren().add(pane2);
-        Scene stseen2 = new Scene(juur2, 600, 535, Color.SNOW);
+
+
 
 
         //Loome 2 Event objekti:
@@ -255,35 +251,14 @@ public class Kalender extends Application {
 
                         mtimeline.setCycleCount(Animation.INDEFINITE);
                         mtimeline.play();
-                    /*Timer timer = new Timer();
-                    Date aeg = ((Meeldetuletus) event).getMeeldetuletuseAeg();
-                    timer.schedule(new TimerTask() {
-                        public void run(){
-                            Group meeldetuletusjuur = new Group();
-                            Text meeldetuletustekst = new Text("MEELDETULETUS! " + event.toString());
-                            meeldetuletustekst.setX(267);
-                            meeldetuletustekst.setY(267);
-                            meeldetuletusjuur.getChildren().add(meeldetuletustekst);
-                            Button tagasinupp = new Button("Tagasi");
-                            tagasinupp.setOnMouseClicked(e -> {
-                                peaLava.setScene(stseen1);
-                            });
-                            meeldetuletusjuur.getChildren().add(tagasinupp);
-                            Scene meeldetuletusStseen = new Scene(meeldetuletusjuur, 535, 535, Color.SNOW);
-                            peaLava.setScene(meeldetuletusStseen);
-                            cancel();
-                        }
-                    }, aeg);*/
                     }
             }
         }
 
 
-
-
         nupp1.setOnMouseClicked(event ->{
             Group lisamisejuur = new Group();
-            GridPane lisamisepane = new GridPane();
+
             TextField nimifield = new TextField("Sisesta ürituse nimi");
             TextField kuupäevfield = new TextField("Sisesta kuupäev kujul päev.kuu.aasta");
             TextField aegfield = new TextField("Sisesta aeg kujul tunnid:minutid, kui soovite lasta programmil aja valida, sisestage \"suvaline\"");
@@ -308,7 +283,6 @@ public class Kalender extends Application {
                     evendid.add(uus);
                 }
                 else{
-                    Event uus = new Event(nimi, päev, aeg, detailidelist);
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
                     Date meeldetuletuseAeg = new Date();
                     try {
@@ -331,14 +305,41 @@ public class Kalender extends Application {
                 }
                 peaLava.setScene(stseen1);
             });
-            lisamisepane.add(nimifield,0,0);
-            lisamisepane.add(kuupäevfield,0,1);
-            lisamisepane.add(aegfield,0,2);
-            lisamisepane.add(detailidfield,0,3);
-            lisamisepane.add(meeldetuletusfield,0,4);
-            lisamisepane.add(lisamisenupp, 0, 5);
+            VBox lisamiseVBox = new VBox(8);
+            Text lisamiseescapetekst = new Text("Tagasi minemiseks vajutage ESC.");
+            lisamiseVBox.getChildren().addAll(lisamiseescapetekst, nimifield, kuupäevfield, aegfield, detailidfield, meeldetuletusfield, lisamisenupp);
+
+
+            BorderPane lisamisepane = new BorderPane();
+            lisamisepane.setMinWidth(900);
+            lisamisepane.setMinHeight(300);
+            lisamisepane.setCenter(lisamiseVBox);
+
+
             lisamisejuur.getChildren().add(lisamisepane);
-            Scene lisamisestseen = new Scene(lisamisejuur, 600, 535, Color.SNOW);
+
+            Scene lisamisestseen = new Scene(lisamisejuur, 900, 300, Color.SNOW);
+            lisamisestseen.widthProperty().addListener((observable, oldvalue, newvalue) -> {
+                        lisamisepane.setMinWidth((Double)newvalue);
+                    }
+            );
+
+            lisamisestseen.heightProperty().addListener((observable, oldvalue, newvalue) -> {
+                        Double muutus = (Double)newvalue/(Double)oldvalue;
+                        nimifield.setMinHeight(nimifield.getHeight() * muutus);
+                        kuupäevfield.setMinHeight(kuupäevfield.getHeight() * muutus);
+                        aegfield.setMinHeight(aegfield.getHeight() * muutus);
+                        detailidfield.setMinHeight(detailidfield.getHeight() * muutus);
+                        meeldetuletusfield.setMinHeight(meeldetuletusfield.getHeight() * muutus);
+                        lisamisenupp.setMinHeight(lisamisenupp.getHeight() * muutus);
+                        //Buggib
+                    }
+            );
+            lisamisestseen.setOnKeyPressed(xy -> {
+                if(xy.getCode() == KeyCode.ESCAPE){
+                    peaLava.setScene(stseen1);
+                }
+            });
             peaLava.setScene(lisamisestseen);
         });
 

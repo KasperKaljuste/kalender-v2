@@ -2,6 +2,7 @@ package oop;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -361,16 +363,36 @@ public class Kalender extends Application {
         nupp3.setOnMouseClicked(event ->{
             Collections.sort(evendid);
             Group vjuur = new Group();
-            GridPane vpane = new GridPane();
-            int i = 0;
-            for (; i < evendid.size(); i++) {
-                vpane.add(new Text(""+evendid.get(i)), 0, i);
+            BorderPane vpane = new BorderPane();
+            vpane.setMinWidth(600);
+            vpane.setMinHeight(535);
+
+            VBox vVBox = new VBox(8);
+            double fontsuurus = (vpane.getHeight()-100)/evendid.size();
+            for (int i=0; i<evendid.size();i++) {
+                Text t = new Text(""+evendid.get(i));
+                t.setFont(new Font(fontsuurus));
+                vVBox.getChildren().add(t);
             }
             Button tagasi = new Button("Tagasi");
             tagasi.setOnMouseClicked(e -> peaLava.setScene(stseen1));
-            vpane.add(tagasi, 0, i+1);
+            vVBox.getChildren().add(tagasi);
+            vVBox.setAlignment(Pos.CENTER);
+            vpane.setCenter(vVBox);
+
             vjuur.getChildren().add(vpane);
+
             Scene väljastus = new Scene(vjuur, 600, 535, Color.SNOW);
+
+            väljastus.widthProperty().addListener((observable, oldvalue, newvalue) -> {
+                        vVBox.setMinWidth((Double)newvalue);
+                    }
+            );
+            väljastus.heightProperty().addListener((observable, oldvalue, newvalue) -> {
+                        vVBox.setMinHeight((Double)newvalue);
+                    }
+            );
+
             peaLava.setScene(väljastus);
         });
         peaLava.setTitle("Kalender");

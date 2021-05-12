@@ -7,7 +7,7 @@ Programmi käivitamisel on keskel hetke kellaaeg ja kuupäev ning all nupud erin
 Võimalik on lisada sündmuseid, väljastada lisatud sündmused ja sündmuseid muuta ja kustutada.
 
 Lisaks on kasutajal võimalik sündmuse tegemisel lisada sellele meeldetuletus ja lisadetailid, kui selleks soovi on.
-Meeldetuletuse lisamine loob taimeri, ning kui praegune aeg ühtib meeldetuletuse ajaga, siis väljastab meeldetuletuse, mis punaselt vilgub.
+Meeldetuletuse lisamine loob timeline'i, ning kui praegune aeg ühtib meeldetuletuse ajaga, siis väljastab meeldetuletuse, mis punaselt vilgub.
 
 
 KLASSID

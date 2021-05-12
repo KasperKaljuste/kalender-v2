@@ -1,0 +1,37 @@
+Autorid on Karl-Magnus Laikoja ja Kasper Kaljuste
+
+Programmiks on kalender-v2. Sellega saab vaadata hetke aega ja kuupäeva ning lisada erinevaid sündmusi. 
+
+Programmi käivitamisel on keskel hetke kellaaeg ja kuupäev ning all nupud erinevateks käsklusteks.
+
+Võimalik on lisada sündmuseid, väljastada lisatud sündmused ja sündmuseid muuta ja kustutada.
+
+Lisaks on kasutajal võimalik sündmuse tegemisel lisada sellele meeldetuletus ja lisadetailid, kui selleks soovi on.
+Meeldetuletuse lisamine loob taimeri, ning kui praegune aeg ühtib meeldetuletuse ajaga, siis väljastab meeldetuletuse, mis punaselt vilgub.
+
+
+KLASSID
+
+KALENDER - Peaklass, siin toimub põhiline loogika ja graafika lisamine (sündmustega asjatamine, suhtlus kasutajaga, failist lugemine ja sinna kirjutamine).
+
+KELL - võtab hetkeaja ja vormistab selle kujule tunnid:minutid
+
+KUUPÄEV - sama mis kell, aga vorming on kujul nädalapäev, päev kuu aasta
+
+MEELDETULETUS - sündmuse laiendus, millel on lisaks meeldetuletuse aeg
+
+EVENT - sündmus, getterid ja setterid, compareTo funktsioon (võrdleb aegu), detailide lisamine ja kustutamine, võimaldab suvalise aja päeva jooksul valida sündmuse alguseks
+
+Teise versiooni tegemisel kasutasime ekraani jagamist. Üks jagas ekraani ning koos arutasime ja see, kellel parasjagu kood lahti oli tegi ka vastavad muudatused.
+
+Aega kulus mõlemal umbes 10h. Ehk kahe peale kokku 20h.
+
+Kokkuvõttes tuli meie arvates korralik programm.
+
+TEGEMISE MURED:
+
+Esialgsele versioonile graafika lisamine oli oodatust keerulisem, saime oodatust vähem koodi taaskasutada.
+
+ESIALGSE VERSIOONI REPO: https://github.com/KasperKaljuste/kalender
+TEISE VERSIOONI REPO: https://github.com/KasperKaljuste/kalender-v2
+

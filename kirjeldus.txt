@@ -26,7 +26,12 @@ Teise versiooni tegemisel kasutasime ekraani jagamist. Üks jagas ekraani ning k
 
 Aega kulus mõlemal umbes 10h. Ehk kahe peale kokku 20h.
 
-Kokkuvõttes tuli meie arvates korralik programm.
+Kokkuvõttes tuli meie arvates korralik programm. Kasutajaliides on suhteliselt mugav. 
+Lisada võiks reaalse kalendri, kus on kuude kaupa päevad ja iga päeva peal on näiteks vastav sündmus.
+
+Testisime valede sisenditega sündmuse lisamist ja see põhjustas probleeme, seega lisasime veahalduse mis vale sisendi korral sulgeb programmi ja ei lisa sündmust faili.
+
+Sündmuse muutmisel praegu eeldame, et kasutaja muudab korrektselt (lisasime ka formaadi näidised). Sellele veahalduse lisamine oleks veel üks võimalik edasiarendus.
 
 TEGEMISE MURED:
 
